@@ -140,16 +140,32 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
+/**
+ * @description 生成一个toast
+ * @param {Toast} props - toast的属性
+ * @returns {Object} - 返回toast对象
+ */
 function toast({ ...props }: Toast) {
   const id = genId()
 
+  /**
+   * @description 更新toast的属性
+   * @param {ToasterToast} props - 更新后的toast属性
+   */
   const update = (props: ToasterToast) =>
     dispatch({
       type: "UPDATE_TOAST",
       toast: { ...props, id },
     })
+
+  /**
+   * @description 执行dismiss操作
+   */
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
 
+  /**
+   * @description 添加toast，并设置相关事件处理
+   */
   dispatch({
     type: "ADD_TOAST",
     toast: {

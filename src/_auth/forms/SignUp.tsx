@@ -14,21 +14,19 @@ import {
 } from "@/components/ui/form";
 import { useNavigate } from 'react-router-dom';
 
-import { SignUpValidation } from '../../lib/validation';
+import { SignUpValidation } from '../../lib/validation/validation';
 import { logo } from '../../public/assets/images'
 import Loader from '@/components/shared/Loader';
 import { Link } from 'react-router-dom';
-import { createUser } from '@/lib/appwrite/api';
 import { useToast } from "@/components/ui/use-toast";
-import { useCreateUserAccount, useSignAccount } from '@/react-query/queriesAndMutationa';
-import { useUserContext } from '@/context/AuthContext';
+import { useCreateUserAccount, useSignAccount } from '@/react-query/queriesAndMutation';
+
 import { useAuthUser } from '@/hook/userContext';
 
 const SignUp = () => {
     const { toast } = useToast();
     const { checkAuthUser, isLoading: isUserLoading } = useAuthUser();
 
-    const isLoading: boolean = false;
     const { mutateAsync: createUser, isPending: isCreatingAccount } = useCreateUserAccount();
     const { mutateAsync: signInAccount, isPending: isSignInAccount } = useSignAccount();
     const navigate = useNavigate();
@@ -61,7 +59,7 @@ const SignUp = () => {
         });
         if (!session) {
             return toast({
-                description: "sign in failed, please try again.",
+                description: "此账号已存在",
                 title: "Error",
             }
             )
@@ -69,7 +67,7 @@ const SignUp = () => {
         const isLogin = await checkAuthUser();
         if (isLogin) {
             form.reset();
-            navigate('/home')
+            navigate('/')
         } else {
             return toast({
                 title: 'sign up failed, please try again.',

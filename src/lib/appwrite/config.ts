@@ -15,5 +15,14 @@ export const avatars = new Avatars(client);
 export const database = new Databases(client);
 export const storage = new Storage(client);
 
+/**
+ * 设置项目ID
+ * @param projectId 项目ID
+ */
 client.setProject(appWriteConfig.projectId);
+
+/**
+ * 设置端点URL
+ * @param url 端点URL
+ */
 client.setEndpoint(appWriteConfig.url);

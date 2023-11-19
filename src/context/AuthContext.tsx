@@ -41,7 +41,6 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
                     email: currentAccount.email,
                     bio: currentAccount.bio,
                     imageUrl: currentAccount.imageUrl,
-
                 })
                 setIsAuthenticated(true);
                 return true;
@@ -59,9 +58,9 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         // localStorage.getItem('cookieFallback') === null) {
         if (localStorage.getItem('cookieFallback') === undefined) {
-            navigate('/sign-in')
+            navigate('/sign-in');
         }
-        checkAuthUser()
+        checkAuthUser();
 
     }, [])
     const value = {

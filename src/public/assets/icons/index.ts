@@ -1,6 +1,7 @@
 import addPost from "./add-post.svg";
 import back from "./back.svg";
 import bookMark from "./bookmark.svg";
+import comment from './chat_bubble_outline_black_24dp.svg';
 import chat from "./chat.svg";
 import del from "./delete.svg";
 import edit from "./edit.svg";
@@ -36,6 +37,7 @@ export {
   filter,
   follow,
   gallery,
+  comment,
   google,
   home,
   like,
