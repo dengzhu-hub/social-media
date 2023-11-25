@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom';
 import './global.css';
 import { SignIn, SignUp } from './_auth/forms';
@@ -12,7 +11,6 @@ const App = () => {
             <Routes>
                 {/* public route  */}
                 <Route element={<AuthLayout />}>
-
                     <Route path='sign-in' element={<SignIn />}>sign in</Route>
                     <Route path='sign-up' element={<SignUp />}>sign in</Route>
                 </Route>

@@ -8,7 +8,7 @@ type PostProps = {
     post: Models.Document;
 }
 const PostCard = ({ post }: PostProps) => {
-    console.log(post)
+    console.log(post);
     console.log(post.creator);
     const { user } = useAuthUser();
     console.log(user);

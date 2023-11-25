@@ -10,7 +10,7 @@ import FileUpload from "../shared/FileUpload";
 import { Input } from "@/components/ui/input";
 import { PostValidation } from "@/lib/validation/validation"
 import { Models } from "appwrite"
-import { useCreatePost } from "@/react-query/queriesAndMutation"
+import { useCreatePost, useUpdatePost } from "@/react-query/queriesAndMutation"
 import { useAuthUser } from "@/hook/userContext"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -19,7 +19,6 @@ import { useToast } from "../ui/use-toast"
 type PostFormProps = {
     post?: Models.Document;
     action: 'CREATE' | 'UPDATE';
-
 }
 
 const PostForm = ({ post, action }: PostFormProps) => {
@@ -29,6 +28,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
     const { user } = useAuthUser();
     const { mutateAsync: createPost, isPending: isUserCreatedPost } = useCreatePost();
+    const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost();
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof PostValidation>>({
@@ -44,6 +44,21 @@ const PostForm = ({ post, action }: PostFormProps) => {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof PostValidation>) {
         console.log('didSubmit');
+        if (post && action === 'UPDATE') {
+            const updatePosts = await updatePost({
+                ...values,
+                postId: post.$id,
+                imageId: post?.imageId,
+                imageUrl: post?.imageUrl,
+            })
+            if (!updatePosts) {
+                toast({
+                    title: 'Error',
+                    description: 'Error updating post'
+                })
+            }
+            return navigate(`/post/${post.$id}`);
+        }
 
         try {
             // Do something with the form values.
@@ -105,6 +120,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                         </FormItem>
                     )}
                 />
+
                 <FormField
                     control={form.control}
                     name="tags"
@@ -139,7 +155,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
                 <div className="flex gap-4 justify-end items-center">
                     <Button type="button" className="capitalize shad-button_dark_4">cancel</Button>
-                    <Button type="submit" className="capitalize shad-button_primary whitespace-nowrap">submit</Button>
+                    <Button type="submit" className="capitalize shad-button_primary whitespace-nowrap" disabled={isLoadingUpdate || isUserCreatedPost}>{isLoadingUpdate || isUserCreatedPost && 'loading...'} {action} post</Button>
                 </div>
             </form>
         </Form>

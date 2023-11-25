@@ -16,8 +16,18 @@ type IUpdateUser = {
   name: string;
   bio: string;
   imageId: string;
-  imageUrl: string;
+  imageUrl: URL;
   file: File[];
+};
+
+export type IUpdatePost = {
+  postId: string;
+  caption: string;
+  imageId: string;
+  imageUrl: URL;
+  file: File[];
+  location?: string;
+  tags?: string;
 };
 type INewPost = {
   userId: string;

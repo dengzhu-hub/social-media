@@ -1,6 +1,7 @@
 import {
   createPost,
   createUser,
+  deletePost,
   deleteSavePost,
   getCurrentUser,
   getPostById,
@@ -9,10 +10,10 @@ import {
   savePost,
   signInAccount,
   signOutAccount,
+  updatePost,
 } from "@/lib/appwrite/api";
-import { INewPost, INewUser } from "@/types";
+import { INewPost, INewUser, IUpdatePost } from "@/types";
 import {
-  QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -167,5 +168,30 @@ export const useGetPostBYId = (postId: string) => {
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
     queryFn: () => getPostById(postId),
     enabled: !!postId,
+  });
+};
+
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (postId: IUpdatePost) => updatePost(postId),
+    onSuccess: data => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
+      });
+    },
+  });
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ postId, imageId }: { postId: string; imageId: string }) =>
+      deletePost(postId, imageId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
   });
 };

@@ -10,7 +10,7 @@ const CreatePost = () => {
           <img src={post} alt="" width={36} height={36} />
           <h3 className='h3-bold md:h2-bold text-left w-full'>create post</h3>
         </div>
-        <PostForm></PostForm>
+        <PostForm action='CREATE'></PostForm>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import { INewPost, INewUser, IUser } from "@/types";
+import { INewPost, INewUser, IUpdatePost, IUpdateUser, IUser } from "@/types";
 import { account, appWriteConfig, avatars, database, storage } from "./config";
 import { AppwriteException, ID, Query } from "appwrite";
 import { post } from "@/public/assets/icons";
@@ -277,4 +277,62 @@ export async function getPostById(postId: string) {
   }
 }
 
+export async function updatePost(post: IUpdatePost) {
+  const hasFileToUpdate = post.file.length > 0;
+  try {
+    let image = {
+      imageUrl: post.imageUrl,
+      imageId: post.imageId,
+    };
+    if (hasFileToUpdate) {
+      const uploadedFile = await uploadFile(post.file[0]);
+      if (!uploadedFile) throw new Error(`文件上传失败`);
+      const fileUrl = getFilePreviewUrl(uploadedFile.$id);
+      if (!fileUrl) {
+        throw new Error(`获取文件url失败`);
+      }
+      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+    }
+    const tags = post?.tags?.replace(/ /g, "").split(",") || [];
+    const updatePost = await database.updateDocument(
+      appWriteConfig.databaseId,
+      appWriteConfig.postCollection,
+      post.postId,
+      {
+        creator: post.postId,
+        caption: post.caption,
+        tags: tags,
+        imageUrl: image.imageUrl,
+        imageId: image.imageId,
+        location: post.location,
+      }
+    );
+    if (!updatePost) {
+      deleteFile(image.imageId);
+      throw new Error(`文章创建失败`);
+    }
+    return updatePost;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
+/**
+ * 删除帖子及其对应的图片
+ * @param postId - 帖子的ID
+ * @param imageId - 图片的ID
+ * @returns - 如果删除成功，返回{ status: "success" }对象；否则返回错误对象
+ */
+export async function deletePost(postId: string, imageId: string) {
+  if (!postId || !imageId) throw new Error("参数错误");
+  try {
+    await database.deleteDocument(
+      appWriteConfig.databaseId,
+      appWriteConfig.postCollection,
+      postId
+    );
+    return { status: "success" };
+  } catch (error) {
+    console.log(error);
+  }
+}
