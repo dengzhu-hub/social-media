@@ -39,7 +39,7 @@ const PostCard = ({ post }: PostProps) => {
                     <p className='backdrop-sepia-0'>{post?.caption}</p>
                     <ul className='mt-2 flex   flex-1 gap-3'>
                         {post?.tags.map((tag: string) => (
-                            <li className='small-medium text-light-3 mb-2 ' key={tag}>#{tag}</li>
+                            <li className='small-medium text-light-3-2 ' key={tag}>#{tag}</li>
                         ))}
                     </ul>
                 </div>

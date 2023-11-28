@@ -1,4 +1,4 @@
-import Bottom from '@/components/shared/Bottom'
+import Bottom from '@/components/shared/Buttom'
 import SideBar from '@/components/shared/SideBar'
 import TopBar from '@/components/shared/TopBar'
 import { Outlet } from 'react-router-dom'

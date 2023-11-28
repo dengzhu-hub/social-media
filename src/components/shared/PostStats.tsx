@@ -1,14 +1,11 @@
-import { AuthContext } from "@/context/AuthContext";
-import { useAuthUser } from "@/hook/userContext";
 import { checkedIsLiked } from "@/lib/utils";
-import { like, save, comment, liked, saved } from "@/public/assets/icons";
+import { like, save, liked, saved } from "@/public/assets/icons";
 import { useDeleteSavePost, useGetCurrentUser, useLikePost, useSavePost } from "@/react-query/queriesAndMutation";
 import { Models } from "appwrite";
-
 import { useState, useEffect } from 'react';
 import Loader from "./Loader";
 type PostStatsProps = {
-    post: Models.Document,
+    post?: Models.Document,
     userId: string;
 }
 
@@ -20,10 +17,9 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     const { mutate: savePost, isPending: isSavePostPending } = useSavePost();
     const { mutate: deleteSavePost, isPending: isDeleteSavePostPending } = useDeleteSavePost();
     const { data: currentUser } = useGetCurrentUser();
-    const hasSaveRecord = currentUser?.save.find((save: Models.Document) => save.$id === post.$id);
+    const hasSaveRecord = currentUser?.save.find((save: Models.Document) => save.$id === post?.$id);
     useEffect(() => {
         setIsSaved(!!hasSaveRecord)
-
     }, [currentUser])
 
     const handleLikePost = (
@@ -40,7 +36,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
         }
 
         setLikes(likesArray);
-        likePost({ postId: post.$id, likesArray });
+        likePost({ postId: post?.$id || '', likesArray });
     };
 
     const handleSaveLikePost = (e: React.MouseEvent) => {
@@ -51,7 +47,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
             setIsSaved(false);
             deleteSavePost(hasSaveRecord.$id);
         } else {
-            savePost({ postId: post.$id, userId });
+            savePost({ postId: post?.$id || '', userId });
             setIsSaved(true);
 
         }
