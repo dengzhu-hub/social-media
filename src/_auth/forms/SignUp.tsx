@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import { useToast } from "@/components/ui/use-toast";
 import { useCreateUserAccount, useSignAccount } from '@/react-query/queriesAndMutation';
 
-import { useAuthUser } from '@/hook/userContext';
+import { useAuthUser } from '@/hooks/userContext';
 
 const SignUp = () => {
     const { toast } = useToast();

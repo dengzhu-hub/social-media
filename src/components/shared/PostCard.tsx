@@ -2,7 +2,7 @@ import { edit, profile } from '@/public/assets/icons';
 import { Models } from 'appwrite';
 import { Link } from 'react-router-dom';
 import { timeAgo } from '@/lib/utils';
-import { useAuthUser } from '@/hook/userContext';
+import { useAuthUser } from '@/hooks/userContext';
 import PostStats from './PostStats';
 type PostProps = {
     post: Models.Document;

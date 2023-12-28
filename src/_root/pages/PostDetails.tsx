@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Loader from '@/components/shared/Loader';
 import { back, del, edit, profile } from '@/public/assets/icons';
 import { Button } from '@/components/ui/button';
-import { useAuthUser } from '@/hook/userContext';
+import { useAuthUser } from '@/hooks/userContext';
 
 import PostStats from '@/components/shared/PostStats';
 import { timeAgo } from '@/lib/utils';

@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { PostValidation } from "@/lib/validation/validation"
 import { Models } from "appwrite"
 import { useCreatePost, useUpdatePost } from "@/react-query/queriesAndMutation"
-import { useAuthUser } from "@/hook/userContext"
+import { useAuthUser } from "@/hooks/userContext"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "../ui/use-toast"

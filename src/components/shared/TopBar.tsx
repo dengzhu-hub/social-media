@@ -4,7 +4,7 @@ import { Button } from '../ui/button'
 import { logout, profile } from '@/public/assets/icons';
 import { useSignOutAccount } from '@/react-query/queriesAndMutation';
 import { useEffect } from 'react';
-import { useAuthUser } from '@/hook/userContext';
+import { useAuthUser } from '@/hooks/userContext';
 
 const TopBar = () => {
     const navigate = useNavigate();

@@ -336,3 +336,38 @@ export async function deletePost(postId: string, imageId: string) {
     console.log(error);
   }
 }
+export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
+  try {
+    const posts = await database.listDocuments(
+      appWriteConfig.databaseId,
+      appWriteConfig.postCollection,
+      queries
+    );
+
+    if (!posts) throw new Error("读取文章失败");
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function searchPosts(searchItem: string) {
+  try {
+    const post = database.listDocuments(
+      appWriteConfig.databaseId,
+      appWriteConfig.postCollection,
+      [Query.search("caption", searchItem)]
+    );
+    if (!post) throw new Error("获取帖子失败");
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+}

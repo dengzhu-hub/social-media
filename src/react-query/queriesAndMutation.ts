@@ -4,6 +4,7 @@ import {
   deletePost,
   deleteSavePost,
   getCurrentUser,
+  getInfinitePosts,
   getPostById,
   getRecentPost,
   likePost,
@@ -195,3 +196,4 @@ export const useDeletePost = () => {
     },
   });
 };
+

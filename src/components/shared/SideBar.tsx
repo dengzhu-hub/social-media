@@ -1,5 +1,5 @@
 import { sidebarLinks } from '@/constants'
-import { useAuthUser } from '@/hook/userContext'
+import { useAuthUser } from '@/hooks/userContext'
 import { logout, profile } from '@/public/assets/icons'
 import { logo } from '@/public/assets/images'
 import { useSignOutAccount } from '@/react-query/queriesAndMutation'
@@ -13,7 +13,8 @@ const SideBar = () => {
   const { user } = useAuthUser();
   const { mutate: signOut, isSuccess } = useSignOutAccount();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const { pathname, key, search, state, hash } = useLocation();
+  console.log(pathname, key, search, state, hash);
 
   useEffect(() => {
     if (isSuccess) navigate('/sign-in')
