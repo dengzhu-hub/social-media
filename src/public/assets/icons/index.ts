@@ -9,6 +9,7 @@ import fav from "./favicon.ico";
 import fileUpload from "./file-upload.svg";
 import filter from "./filter.svg";
 import follow from "./follow.svg";
+import users from './users.png';
 import gallery from "./gallery-add.svg";
 import google from "./google.svg";
 import home from "./home.svg";
@@ -52,4 +53,5 @@ export {
   search,
   share,
   wallpaper,
+  users,
 };

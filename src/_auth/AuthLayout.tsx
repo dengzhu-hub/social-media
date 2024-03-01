@@ -1,18 +1,19 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { side } from '../public/assets/images'
+import { useAuthUser } from '@/hooks/userContext';
 
 const AuthLayout = () => {
-    const isAuthenticated: boolean = false;
+    const {isAuthenticated} = useAuthUser()
     return (
         <>
             {isAuthenticated ? (
                 <Navigate to="/"></Navigate>
             ) : (
                 <>
-                    <section className='flex flex-col py-10 justify-center flex-1  items-center '>
+                    <section className='flex flex-col items-center justify-center flex-1 py-10 '>
                         <Outlet />
                     </section>
-                    <img className='hidden xl:block object-cover w-1/2 bg-no-repeat' src={side} alt="" />
+                    <img className='hidden object-cover w-1/2 bg-no-repeat xl:block' src={side} alt="" />
                 </>
 
 

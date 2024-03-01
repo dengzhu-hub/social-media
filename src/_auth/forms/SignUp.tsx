@@ -48,7 +48,7 @@ const SignUp = () => {
         const newUser = createUser(values);
         if (!newUser) {
             return toast({
-                description: "Something went wrong",
+                description: "注册失败",
                 title: "Error",
             }
             )
@@ -58,11 +58,13 @@ const SignUp = () => {
             password: values.password
         });
         if (!session) {
-            return toast({
-                description: "此账号已存在",
+             toast({
+                description: "注册成功，即将跳转到登录页面",
                 title: "Error",
             }
-            )
+            );
+            navigate('/sign-in');
+            return;
         }
         const isLogin = await checkAuthUser();
         if (isLogin) {
@@ -78,13 +80,13 @@ const SignUp = () => {
     }
     return (
         <Form {...form}>
-            <div className='sm:w-420 flex-center flex-col '>
+            <div className='flex-col sm:w-420 flex-center '>
                 <img src={logo} alt="" />
-                <h2 className='h3-bold md:h2-bold pt-5 sm:pt-12'>create a new account</h2>
-                <p className='text-light-3 small-medium md:base-regular mt-2'>to use Snapgram enter your details</p>
+                <h2 className='pt-5 h3-bold md:h2-bold sm:pt-12'>create a new account</h2>
+                <p className='mt-2 text-light-3 small-medium md:base-regular'>to use Snapgram enter your details</p>
 
 
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full mt-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 mt-4">
                     <FormField
                         control={form.control}
                         name="name"
@@ -108,6 +110,9 @@ const SignUp = () => {
                                 <FormControl>
                                     <Input type='text' className='shad-input' {...field} />
                                 </FormControl>
+                                <FormDescription>
+                This is your public display name.
+              </FormDescription>
 
                                 <FormMessage />
                             </FormItem>
@@ -123,7 +128,7 @@ const SignUp = () => {
                                     <Input type='email' className='shad-input' {...field} />
                                 </FormControl>
 
-                                <FormMessage />
+                                <FormMessage className='' />
                             </FormItem>
                         )}
                     />
@@ -141,11 +146,11 @@ const SignUp = () => {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className='shad-button_primary uppercase'>{
-                        isCreatingAccount ? (
+                    <Button type="submit" className='uppercase shad-button_primary'>{
+                        isCreatingAccount || isSignInAccount || isUserLoading ? (
                             <Loader children='loading...'></Loader>
                         ) : "sign up"}</Button>
-                    <p className='mt-2 text-lg leading-none font-semibold'>Already have an account?<Link to="/sign-in" className='text-primary-500 ml-2 font-bold  uppercase'>Log in</Link></p>
+                    <p className='mt-2 text-lg font-semibold leading-none'>Already have an account?<Link to="/sign-in" className='ml-2 font-bold uppercase text-primary-500'>Log in</Link></p>
                 </form>
             </div>
         </Form>

@@ -5,7 +5,12 @@ import AuthLayout from './_auth/AuthLayout';
 import RootLayout from './_root/RootLayout';
 import { AllUsers, CreatePost, Explore, Home, PostDetails, Profile, Saved, UpdatePost, UpdateProfile } from './_root/pages';
 import { Toaster } from "@/components/ui/toaster";
+import ErrorPage from './_root/pages/ErrorPage';
+import GridPostList from './components/shared/GridPostList';
+import { useOutletContext } from 'react-router-dom';
 const App = () => {
+    const user = useOutletContext();
+    console.log(user)
     return (
         <main className='flex'>
             <Routes>
@@ -25,10 +30,13 @@ const App = () => {
                     <Route path="/create-post" element={<CreatePost />}></Route>
                     <Route path="/update-post/:id" element={<UpdatePost />}></Route>
                     <Route path="/post/:id" element={<PostDetails />}></Route>
-                    <Route path="/profile/:id/*" element={<Profile />}></Route>
+                    <Route path="/profile/:id/*" element={<Profile />}>
+                        
+                    </Route>
                     <Route path="/update-profile/:id" element={<UpdateProfile />}></Route>
 
                 </Route>
+                <Route  path='*' element={<ErrorPage />}/>
             </Routes>
 
             <Toaster />

@@ -1,8 +1,6 @@
-import { INewPost, INewUser, IUpdatePost, IUpdateUser, IUser } from "@/types";
+import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 import { account, appWriteConfig, avatars, database, storage } from "./config";
-import { AppwriteException, ID, Query } from "appwrite";
-import { post } from "@/public/assets/icons";
-
+import { ID, Query } from "appwrite";
 export const createUser = async (user: INewUser) => {
   //TODO 黑暗时代卡
   try {
@@ -226,15 +224,15 @@ export async function likePost(postId: string, likesArray: string[]) {
  * @param userId 用户的ID
  * @returns 保存成功的帖子信息
  */
-export async function savePost(postId: string, userId: string) {
+export async function savePost(userId: string,postId: string ) {
   try {
     const savePost = await database.createDocument(
       appWriteConfig.databaseId,
       appWriteConfig.saveCollection,
       ID.unique(),
       {
-        postId,
-        userId,
+        user:userId,
+        post:postId
       }
     );
     if (!savePost) throw new Error("保存失败");
@@ -308,7 +306,7 @@ export async function updatePost(post: IUpdatePost) {
       }
     );
     if (!updatePost) {
-      deleteFile(image.imageId);
+      deleteFile(post.imageId);
       throw new Error(`文章创建失败`);
     }
     return updatePost;
@@ -323,7 +321,7 @@ export async function updatePost(post: IUpdatePost) {
  * @param imageId - 图片的ID
  * @returns - 如果删除成功，返回{ status: "success" }对象；否则返回错误对象
  */
-export async function deletePost(postId: string, imageId: string) {
+export async function deletePost(postId?: string, imageId?: string) {
   if (!postId || !imageId) throw new Error("参数错误");
   try {
     await database.deleteDocument(
@@ -336,6 +334,7 @@ export async function deletePost(postId: string, imageId: string) {
     console.log(error);
   }
 }
+
 export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
   const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
 
@@ -349,8 +348,10 @@ export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
       appWriteConfig.postCollection,
       queries
     );
+    
+    
 
-    if (!posts) throw new Error("读取文章失败");
+    if (!posts) throw Error;
 
     return posts;
   } catch (error) {
@@ -370,4 +371,95 @@ export async function searchPosts(searchItem: string) {
   } catch (error) {
     console.log(error);
   }
+}
+
+
+export async function getUsers(limit ?:number) {
+  const queries:any[] =  [Query.orderDesc("$createdAt"),Query.limit(10)];
+  if(
+    limit
+  ) queries.push(Query.limit(limit))
+  try {
+    const users = await database.listDocuments(appWriteConfig.databaseId,appWriteConfig.userCollection,
+     queries)
+    if (!users) throw new Error('user not found');
+    return users;
+    
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+
+export async function getUserById(userId:string) {
+  try {
+    const user = await database.getDocument(
+      appWriteConfig.databaseId,
+      appWriteConfig.userCollection,
+      userId
+    );
+    if (!user) throw new Error(`Could not find the user with id ${userId}`);
+    return user;
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+export async function updateUser(user:IUpdateUser) {
+  const hasFileToUpdate = user.file.length > 0;
+  try {
+    let image = {
+      imageUrl: user.imageUrl,
+      imageId: user.imageId,
+    };
+
+    if (hasFileToUpdate) {
+      // Upload new file to appwrite storage
+      const uploadedFile = await uploadFile(user.file[0]);
+      if (!uploadedFile) throw Error;
+
+      // Get new file url
+      const fileUrl = getFilePreviewUrl(uploadedFile.$id);
+      if (!fileUrl) {
+        await deleteFile(uploadedFile.$id);
+        throw Error;
+      }
+
+      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+    }
+
+    //  Update user
+    const updatedUser = await database.updateDocument(
+      appWriteConfig.databaseId,
+      appWriteConfig.userCollection,
+      user.userId,
+      {
+        name: user.name,
+        bio: user.bio,
+        imageUrl: image.imageUrl,
+        imageId: image.imageId,
+      }
+    );
+
+    // Failed to update
+    if (!updatedUser) {
+      // Delete new file that has been recently uploaded
+      if (hasFileToUpdate) {
+        await deleteFile(image.imageId);
+      }
+      // If no new file uploaded, just throw error
+      throw Error;
+    }
+
+    // Safely delete old file after successful update
+    if (user.imageId && hasFileToUpdate) {
+      await deleteFile(user.imageId);
+    }
+
+    return updatedUser;
+  } catch (error) {
+    console.log(error);
+  }
+
 }

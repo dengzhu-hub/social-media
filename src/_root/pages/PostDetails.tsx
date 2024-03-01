@@ -19,12 +19,12 @@ const PostDetails = () => {
 
 
   const handleDeletePost = () => {
-    // deletePost({ postId: id, imageId: post?.imageId });
+     deletePost({ postId: id, imageId: post?.imageId });
     navigate(-1);
   };
   return (
     <div className="post_details-container">
-      <div className="hidden md:flex max-w-5xl w-full">
+      <div className="hidden w-full max-w-5xl md:flex">
         <Button
           onClick={() => navigate(-1)}
           variant="ghost"
@@ -50,7 +50,7 @@ const PostDetails = () => {
           />
 
           <div className="post_details-info">
-            <div className="flex-between w-full">
+            <div className="w-full flex-between">
               <Link
                 to={`/profile/${post?.creator?.$id}`}
                 className="flex items-center gap-3">
@@ -60,13 +60,13 @@ const PostDetails = () => {
                     profile
                   }
                   alt="creator"
-                  className="w-8 h-8 lg:w-12 lg:h-12 rounded-full"
+                  className="w-8 h-8 rounded-full lg:w-12 lg:h-12"
                 />
-                <div className="flex gap-1 flex-col">
+                <div className="flex flex-col gap-1">
                   <p className="base-medium lg:body-bold text-light-1">
                     {post?.creator?.name}
                   </p>
-                  <div className="flex-center gap-2 text-light-3">
+                  <div className="gap-2 flex-center text-light-3">
                     <p className="subtle-semibold lg:small-regular ">
                       {timeAgo(post?.$createdAt)}
                     </p>
@@ -78,7 +78,7 @@ const PostDetails = () => {
                 </div>
               </Link>
 
-              <div className="flex-center gap-4">
+              <div className="gap-4 flex-center">
                 <Link
                   to={`/update-post/${post?.$id}`}
                   className={`${user.id !== post?.creator?.$id && "hidden"}`}>
@@ -105,11 +105,11 @@ const PostDetails = () => {
               </div>
             </div>
 
-            <hr className="border w-full border-dark-4/80" />
+            <hr className="w-full border border-dark-4/80" />
 
             <div className="flex flex-col flex-1 w-full small-medium lg:base-regular">
               <p>{post?.caption}</p>
-              <ul className="flex gap-1 mt-2">
+              <ul className="flex gap-2 mt-2">
                 {post?.tags.map((tag: string, index: string) => (
                   <li
                     key={`${tag}${index}`}
@@ -128,9 +128,9 @@ const PostDetails = () => {
       )}
 
       <div className="w-full max-w-5xl">
-        <hr className="border w-full border-dark-4/80" />
+        <hr className="w-full border border-dark-4/80" />
 
-        <h3 className="body-bold md:h3-bold w-full my-10">
+        <h3 className="w-full my-10 body-bold md:h3-bold">
           More Related Posts
         </h3>
 

@@ -51,3 +51,5 @@ export function timeAgo(dateString: string): string {
 export const checkedIsLiked = (likesArray: string[], userId: string) => {
   return likesArray.includes(userId);
 };
+
+export const convertFileToUrl = (file: File) => URL.createObjectURL(file);

@@ -89,7 +89,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex max-w-5xl gap-9 w-full flex-col justify-center  ">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col justify-center w-full max-w-5xl gap-9 ">
                 <FormField
                     control={form.control}
                     name="caption"
@@ -153,8 +153,8 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
 
 
-                <div className="flex gap-4 justify-end items-center">
-                    <Button type="button" className="capitalize shad-button_dark_4">cancel</Button>
+                <div className="flex items-center justify-end gap-4">
+                    <Button type="button" onClick={() => {navigate(-1)}} className="capitalize shad-button_dark_4">cancel</Button>
                     <Button type="submit" className="capitalize shad-button_primary whitespace-nowrap" disabled={isLoadingUpdate || isUserCreatedPost}>{isLoadingUpdate || isUserCreatedPost && 'loading...'} {action} post</Button>
                 </div>
             </form>
