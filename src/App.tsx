@@ -19,10 +19,8 @@ const App = () => {
                     <Route path='sign-in' element={<SignIn />}>sign in</Route>
                     <Route path='sign-up' element={<SignUp />}>sign in</Route>
                 </Route>
-
                 {/* private route  */}
                 <Route element={<RootLayout />}>
-
                     <Route index element={<Home />}></Route>
                     <Route path="/explore" element={<Explore />}></Route>
                     <Route path="/saved" element={<Saved />}></Route>
@@ -30,15 +28,12 @@ const App = () => {
                     <Route path="/create-post" element={<CreatePost />}></Route>
                     <Route path="/update-post/:id" element={<UpdatePost />}></Route>
                     <Route path="/post/:id" element={<PostDetails />}></Route>
-                    <Route path="/profile/:id/*" element={<Profile />}>
-                        
+                    <Route path="/profile/:id/*" element={<Profile />}>                     
                     </Route>
                     <Route path="/update-profile/:id" element={<UpdateProfile />}></Route>
-
                 </Route>
                 <Route  path='*' element={<ErrorPage />}/>
             </Routes>
-
             <Toaster />
         </main>
     )

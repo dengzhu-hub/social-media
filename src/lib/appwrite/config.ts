@@ -16,7 +16,7 @@ export const storage = new Storage(client);
 
 /**
  * 设置项目ID
- * @param projectId 项目ID
+ * @param projectId 项目ID-6 
  */
 client.setProject(appWriteConfig.projectId);
 

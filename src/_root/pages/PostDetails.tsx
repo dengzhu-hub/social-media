@@ -22,6 +22,9 @@ const PostDetails = () => {
      deletePost({ postId: id, imageId: post?.imageId });
     navigate(-1);
   };
+  if (isLoading) return (
+    <Loader children =''/>
+  )
   return (
     <div className="post_details-container">
       <div className="hidden w-full max-w-5xl md:flex">

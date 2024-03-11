@@ -12,6 +12,7 @@ import { Button } from '../ui/button'
 const SideBar = () => {
   const { user } = useAuthUser();
   const { mutate: signOut, isSuccess } = useSignOutAccount();
+  console.log(isSuccess)
   const navigate = useNavigate();
   const { pathname, key, search, state, hash } = useLocation();
   console.log(pathname, key, search, state, hash);
@@ -25,17 +26,17 @@ const SideBar = () => {
   return (
     <nav className='leftsidebar'>
       <div className='flex flex-col gap-11'>
-        <Link to={'/'} className='flex gap-3 items-center'>
+        <Link to={'/'} className='flex items-center gap-3'>
           <img src={logo} alt="sidebar logo " width={170} height={36} />
         </Link>
-        <Link to={`/profile/${user.id}`} className='flex gap-3 items-center '>
-          <img src={user.imageUrl || profile} alt="" className='h-12 w-12 rounded-full' />
+        <Link to={`/profile/${user.id}`} className='flex items-center gap-3 '>
+          <img src={user.imageUrl || profile} alt="" className='w-12 h-12 rounded-full' />
           <div className='flex flex-col'>
             <p className='body-bold'>{user.name}</p>
             <p className='small-regular text-light-3'>@{user.username}</p>
           </div>
         </Link>
-        <ul className='flex gap-6 flex-col'>
+        <ul className='flex flex-col gap-6'>
           {sidebarLinks.map((link: INavLink) => {
             const isActive = pathname === link.route;
             return (
@@ -55,7 +56,7 @@ const SideBar = () => {
       </div>
       <Button onClick={() => signOut()} variant={'ghost'} className='shad-button_ghost'>
         <img src={logout} alt="logout " />
-        <p className='small-medium capitalize'>logout</p>
+        <p className='capitalize small-medium'>logout</p>
       </Button>
     </nav>
   )

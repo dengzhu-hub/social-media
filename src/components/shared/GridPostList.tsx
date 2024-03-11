@@ -13,6 +13,9 @@ type GridPostListProps = {
 const GridPostList = ({posts,showUser=true, showStars = true}:GridPostListProps) => {
 
   const {user} = useAuthUser();
+
+  
+  console.log(user)
   return (
     <ul className='grid-container'>{posts.map(post => (
       

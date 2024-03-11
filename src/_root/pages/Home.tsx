@@ -12,13 +12,14 @@ const Home = () => {
 
   const { data: post, hasNextPage, fetchNextPage } = useGetPosts();
   const {data:creators, isLoading: isLoadingUser, isError: isErrorUser} = useGetUsers();
+  // console.log(isLoadingUser)
   const {ref, inView} = useInView();
   const { data: posts, isLoading: isLoadingPost, isError: isErrorPost } = useGetRecentPosts();
-  useEffect(() => {
-    if (inView) fetchNextPage();
+  // useEffect(() => {
+  //   if (inView) fetchNextPage();
     
-  }, [inView])
-  if (isErrorPost) return <div>Error</div>;
+  // }, [inView])
+  // if (isErrorPost) return <div>Error</div>;
 
   return (
     <div className='flex flex-1'>

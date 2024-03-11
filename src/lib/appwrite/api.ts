@@ -68,7 +68,18 @@ export async function signInAccount(user: { email: string; password: string }) {
 export async function signOutAccount() {
   try {
     const session = await account.deleteSession("current");
+    console.log(session);
     return session;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getAccount() {
+  try {
+    const currentAccount = await account.get();
+
+    return currentAccount;
   } catch (error) {
     console.log(error);
   }
@@ -78,19 +89,25 @@ export async function signOutAccount() {
  * 获取当前用户的信息
  * @returns {Promise<any>} 当前用户的信息
  */
+
 export async function getCurrentUser() {
   try {
-    const currentAccount = await account.get();
-    if (!currentAccount) throw new Error("获取当前账户不存在");
+    const currentAccount = await getAccount();
+
+    if (!currentAccount) throw Error;
+
     const currentUser = await database.listDocuments(
       appWriteConfig.databaseId,
       appWriteConfig.userCollection,
       [Query.equal("accountId", currentAccount.$id)]
     );
-    if (!currentUser) throw new Error("当前用户不存在");
+
+    if (!currentUser) throw Error;
+
     return currentUser.documents[0];
   } catch (error) {
     console.log(error);
+    return null;
   }
 }
 
@@ -297,7 +314,7 @@ export async function updatePost(post: IUpdatePost) {
       appWriteConfig.postCollection,
       post.postId,
       {
-        creator: post.postId,
+        
         caption: post.caption,
         tags: tags,
         imageUrl: image.imageUrl,

@@ -15,10 +15,10 @@ import { useAuthUser } from "@/hooks/userContext"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "../ui/use-toast"
-
+import Loader from "@/components/shared/Loader";
 type PostFormProps = {
     post?: Models.Document;
-    action: 'CREATE' | 'UPDATE';
+    action: 'Create' | 'Update';
 }
 
 const PostForm = ({ post, action }: PostFormProps) => {
@@ -29,6 +29,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
     const { user } = useAuthUser();
     const { mutateAsync: createPost, isPending: isUserCreatedPost } = useCreatePost();
     const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost();
+    console.log(isLoadingUpdate, isUserCreatedPost)
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof PostValidation>>({
@@ -44,7 +45,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof PostValidation>) {
         console.log('didSubmit');
-        if (post && action === 'UPDATE') {
+        if (post && action === 'Update') {
             const updatePosts = await updatePost({
                 ...values,
                 postId: post.$id,
@@ -97,7 +98,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                         <FormItem>
                             <FormLabel className="shad-form_label">caption</FormLabel>
                             <FormControl>
-                                <Textarea className="shad-textarea custom-scrollbar" placeholder="shadcn" {...field} />
+                                <Textarea className="shad-textarea custom-scrollbar" placeholder="分享你的想法..." {...field} />
                             </FormControl>
 
                             <FormMessage className="shad-form_message" />
@@ -128,7 +129,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                         <FormItem>
                             <FormLabel className="shad-form_label">addTags(separated by comma ",")</FormLabel>
                             <FormControl>
-                                <Input type="text" className="shad-input" placeholder="javascript nextJs react"  {...field} />
+                                <Input type="text" className="shad-input" placeholder="输入您想要添加的标签..."  {...field} />
                             </FormControl>
 
                             <FormMessage className="shad-form_message" />
@@ -143,7 +144,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                         <FormItem>
                             <FormLabel className="shad-form_label">add location</FormLabel>
                             <FormControl>
-                                <Input type="text" className="shad-input"   {...field} />
+                                <Input type="text" className="shad-input"   placeholder="告诉我们您在哪里..." {...field} />
                             </FormControl>
 
                             <FormMessage className="shad-form_message" />
@@ -155,7 +156,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
                 <div className="flex items-center justify-end gap-4">
                     <Button type="button" onClick={() => {navigate(-1)}} className="capitalize shad-button_dark_4">cancel</Button>
-                    <Button type="submit" className="capitalize shad-button_primary whitespace-nowrap" disabled={isLoadingUpdate || isUserCreatedPost}>{isLoadingUpdate || isUserCreatedPost && 'loading...'} {action} post</Button>
+                    <Button type="submit" className="capitalize shad-button_primary whitespace-nowrap" 
+                    disabled={isLoadingUpdate || isUserCreatedPost}>
+                        {(isLoadingUpdate || isUserCreatedPost) && (<Loader children='' />)} 
+                        {action} post</Button>
                 </div>
             </form>
         </Form>

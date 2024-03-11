@@ -10,7 +10,7 @@ const UpdatePost = () => {
   const { data: posts, isPending: isLoadingPost } = useGetPostBYId(id || '');
   if (isLoadingPost) {
     return (
-      <div className='flex-center w-full h-full'>
+      <div className='w-full h-full flex-center'>
         <Loader children=''></Loader>
       </div>
     )
@@ -18,11 +18,11 @@ const UpdatePost = () => {
   return (
     <div className='flex flex-1'>
       <div className='common-container'>
-        <div className='flex gap-2 w-full max-w-5xl flex-start justify-start'>
+        <div className='flex justify-start w-full max-w-5xl gap-2 flex-start'>
           <img src={post} alt="" width={36} height={36} />
-          <h3 className='h3-bold md:h2-bold text-left w-full capitalize'>edit post</h3>
+          <h3 className='w-full text-left capitalize h3-bold md:h2-bold'>edit post</h3>
         </div>
-        {isLoadingPost ? <Loader children=''></Loader> : <PostForm action='UPDATE' post={posts}></PostForm>}
+        {isLoadingPost ? <Loader children=''></Loader> : <PostForm action='Update' post={posts}></PostForm>}
       </div>
     </div>
   )

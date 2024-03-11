@@ -3,10 +3,9 @@ import LikedPosts from "@/components/shared/LikedPosts";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
 import { useAuthUser } from "@/hooks/userContext";
-import { edit, profile, post } from "@/public/assets/icons";
+import { edit, profile, post, liked } from "@/public/assets/icons";
 import { useGetUserById } from "@/react-query/queriesAndMutation";
-import React from "react";
-import { useLocation, useParams, Link, useOutletContext, Route, Outlet, Routes } from "react-router-dom";
+import { useLocation, useParams, Link, Route, Outlet, Routes } from "react-router-dom";
 interface StatBlockProps {
   value: string | number,
   label: string,
@@ -101,7 +100,7 @@ const Profile = () => {
               pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
             }`}>
             <img
-              src={"/assets/icons/like.svg"}
+              src={liked}
               alt="like"
               width={20}
               height={20}

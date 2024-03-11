@@ -63,13 +63,13 @@ const SignIn = () => {
   }
   return (
     <Form {...form}>
-      <div className='sm:w-420 flex-center flex-col '>
+      <div className='flex-col sm:w-420 flex-center '>
         <img src={logo} alt="" />
-        <h2 className='h3-bold md:h2-bold pt-5 sm:pt-12'>login to your account</h2>
-        <p className='text-light-3 small-medium md:base-regular mt-2'>to use Snapgram enter your details</p>
+        <h2 className='pt-5 h3-bold md:h2-bold sm:pt-12'>login to your account</h2>
+        <p className='mt-2 text-light-3 small-medium md:base-regular'>to use Snapgram enter your details</p>
 
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full mt-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 mt-4">
 
           <FormField
             control={form.control}
@@ -78,7 +78,7 @@ const SignIn = () => {
               <FormItem>
                 <FormLabel>email</FormLabel>
                 <FormControl>
-                  <Input type='email' className='shad-input' {...field} />
+                  <Input type='email' placeholder='name@domain.com' className='shad-input' {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -92,18 +92,18 @@ const SignIn = () => {
               <FormItem>
                 <FormLabel>password</FormLabel>
                 <FormControl>
-                  <Input type='password' className='shad-input' {...field} />
+                  <Input type='password' placeholder='************' className='shad-input' {...field} />
                 </FormControl>
 
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className='shad-button_primary uppercase'>{
+          <Button type="submit" className='uppercase shad-button_primary'>{
             isUserLoading ? (
               <Loader children='loading...'></Loader>
             ) : "sign in"}</Button>
-          <p className='mt-2 text-lg leading-none font-semibold'>don't have an account?<Link to="/sign-up" className='text-primary-500 ml-2 font-bold  uppercase'>sign up</Link></p>
+          <p className='mt-2 text-lg font-semibold leading-none'>New to Snapgram Community? <Link to="/sign-up" className='ml-2 font-bold text-primary-500'>Create account.</Link></p>
         </form>
       </div>
     </Form>
