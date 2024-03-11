@@ -4,18 +4,14 @@ import { logout, profile } from '@/public/assets/icons'
 import { logo } from '@/public/assets/images'
 import { useSignOutAccount } from '@/react-query/queriesAndMutation'
 import { INavLink } from '@/types'
-import path from 'path'
 import { useEffect } from 'react'
-import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
+import { Link, useNavigate, NavLink } from 'react-router-dom'
 import { Button } from '../ui/button'
 
 const SideBar = () => {
   const { user } = useAuthUser();
   const { mutate: signOut, isSuccess } = useSignOutAccount();
-  console.log(isSuccess)
   const navigate = useNavigate();
-  const { pathname, key, search, state, hash } = useLocation();
-  console.log(pathname, key, search, state, hash);
 
   useEffect(() => {
     if (isSuccess) navigate('/sign-in')

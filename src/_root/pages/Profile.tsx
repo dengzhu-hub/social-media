@@ -22,11 +22,8 @@ const StatBlock = ({value, label}:StatBlockProps) => {
 const Profile = () => {
   const { pathname } = useLocation();
   const { user } = useAuthUser();
-  console.log(user);
   const { id } = useParams();
   const { data: currentUser } = useGetUserById(id || "");
-  console.log(currentUser);
-  // console.log(id)
   if (!currentUser) {
     return <Loader children="" />;
   }

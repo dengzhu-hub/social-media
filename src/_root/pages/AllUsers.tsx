@@ -1,10 +1,7 @@
 import { users } from '@/public/assets/icons'
-import React from 'react'
 import { useToast } from '@/components/ui/use-toast';
 import { useGetUsers } from '@/react-query/queriesAndMutation';
 import Loader from '@/components/shared/Loader';
-import { IUser } from '@/types';
-import { Models } from 'appwrite';
 import UserCard from '@/components/shared/UserCard';
 
 const AllUsers = () => {

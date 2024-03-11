@@ -1,7 +1,5 @@
 import { profile } from '@/public/assets/icons'
-import { IUser } from '@/types'
 import { Models } from 'appwrite'
-import React from 'react'
 import { Link } from 'react-router-dom'
 type UserCardProps = {
     user:Models.Document,

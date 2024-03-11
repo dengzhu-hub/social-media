@@ -13,13 +13,12 @@ import {
 } from "@/components/ui/form";
 import { useNavigate } from 'react-router-dom';
 
-import { SignInValidation, SignUpValidation } from '../../lib/validation/validation';
+import { SignInValidation } from '../../lib/validation/validation';
 import { logo } from '../../public/assets/images'
 import Loader from '@/components/shared/Loader';
 import { Link } from 'react-router-dom';
-import { createUser } from '@/lib/appwrite/api';
 import { useToast } from "@/components/ui/use-toast";
-import { useCreateUserAccount, useSignAccount } from '@/react-query/queriesAndMutation';
+import { useSignAccount } from '@/react-query/queriesAndMutation';
 import { useAuthUser } from '@/hooks/userContext';
 
 const SignIn = () => {

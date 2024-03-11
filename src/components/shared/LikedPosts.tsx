@@ -1,5 +1,4 @@
 import { useGetCurrentUser } from '@/react-query/queriesAndMutation'
-import React from 'react'
 import Loader from './Loader';
 import GridPostList from './GridPostList';
 

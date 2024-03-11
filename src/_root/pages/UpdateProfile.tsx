@@ -19,7 +19,6 @@ import { useAuthUser } from "@/hooks/userContext";
 import { ProfileValidation } from "@/lib/validation/validation";
 import { useGetUserById, useUpdateUser } from "@/react-query/queriesAndMutation";
 import Loader from "@/components/shared/Loader";
-import FileUpload from "@/components/shared/FileUpload";
 import ProfileUploader from "@/components/shared/ProfileUploader";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,7 +30,6 @@ const UpdateProfile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user, setUser } = useAuthUser();
-console.log(user);
   const form = useForm<z.infer<typeof ProfileValidation>>({
     resolver: zodResolver(ProfileValidation),
     defaultValues: {
@@ -45,7 +43,6 @@ console.log(user);
 
   // Queries
   const { data: currentUser } = useGetUserById(id || "");
-  console.log(currentUser)
   const { mutateAsync: updateUser, isPending: isLoadingUpdate } =
     useUpdateUser();
 

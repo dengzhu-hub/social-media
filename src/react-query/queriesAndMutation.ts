@@ -7,7 +7,6 @@ import {
   getInfinitePosts,
   getPostById,
   getRecentPost,
-  getUser,
   getUserById,
   getUsers,
   likePost,

@@ -1,6 +1,5 @@
 import PostForm from '@/components/form/PostForm'
 import { post } from '@/public/assets/icons'
-import React from 'react'
 
 const CreatePost = () => {
   return (

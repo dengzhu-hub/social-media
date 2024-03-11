@@ -13,7 +13,6 @@ const PostDetails = () => {
   const { user } = useAuthUser();
 
   const { data: post, isLoading } = useGetPostBYId(id || '');
-  console.log(post)
 
   const { mutate: deletePost } = useDeletePost();
 
