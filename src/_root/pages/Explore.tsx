@@ -12,11 +12,14 @@ const Explore = () => {
   const [searchValue, setSearchValue] = useState('');
   const debounceValue = useDebounce(searchValue, 500);
   const { data: posts, hasNextPage, fetchNextPage } = useGetPosts();
+  console.log(hasNextPage)
   const { data: searchResultPost, isFetching: isSearchFetching } = useSearchPosts(debounceValue);
   useEffect(() => {
     if (inView && !searchValue) fetchNextPage();
     
   }, [inView])
+
+  
   if (!posts) {
     return (
       <div className='flex w-full h-full'>
@@ -27,7 +30,7 @@ const Explore = () => {
   }
   const shouldShowSearchResults = searchValue !== "";
   const shouldShowPosts = !shouldShowSearchResults &&
-    posts.pages.every((item) => item?.documents.length === 0);
+  posts.pages.every((item) => item?.documents.length === 0);
 
   return (
     <div className='explore-container'>
@@ -60,14 +63,14 @@ const Explore = () => {
             <p className='text-light-2'> end of post</p>
           ) : (
             posts.pages.map((item, index) => (
-              <GridPostList posts={item.documents} key={`page-${index}`} />
+              <GridPostList posts={item?.documents} key={`page-${index}`} />
             ))
           )
         )}
       </div>
-      {hasNextPage && (
-        <div className='' ref={ref}>
-          <Loader children='hold on' />
+      {hasNextPage && !searchValue && (
+        <div className='mt-10' ref={ref}>
+          <Loader children='' />
         </div>
         
           

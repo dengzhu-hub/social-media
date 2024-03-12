@@ -352,101 +352,158 @@ export async function deletePost(postId?: string, imageId?: string) {
   }
 }
 
+/**
+ * 无限加载文章的异步函数。
+ * @param {Object} 参数对象，包含一个必需的pageParam字段。
+ * @param {number} pageParam 页码参数，用于指定要加载的文章页。
+ * @returns 返回一个Promise，解析为文章帖子的数组。
+ */
 export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+  // 初始化查询条件，包括按更新时间降序排列和限制返回的文章数量。
   const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
 
+  // 如果提供了页码参数，则添加到查询条件中，用于分页。
   if (pageParam) {
     queries.push(Query.cursorAfter(pageParam.toString()));
   }
 
   try {
+    // 执行数据库查询，获取文章列表。
     const posts = await database.listDocuments(
       appWriteConfig.databaseId,
       appWriteConfig.postCollection,
       queries
     );
-    
-    
 
+    // 如果查询结果为空，抛出错误。
     if (!posts) throw Error;
 
+    // 返回查询到的文章帖子。
     return posts;
   } catch (error) {
+    // 捕获并记录查询过程中发生的任何错误。
     console.log(error);
   }
 }
+
+/**
+ * 异步搜索帖子函数
+ * @param searchItem 搜索关键字，用于查询帖子中包含该关键字的帖子
+ * @returns 返回查询到的帖子列表。如果查询失败，将抛出异常
+ */
+// export async function searchPosts(searchItem: string) {
+//   try {
+//     // 使用提供的数据库ID和集合名称，以及搜索查询来获取帖子
+//     const post = database.listDocuments(
+//       appWriteConfig.databaseId,
+//       appWriteConfig.postCollection,
+//       [Query.search("caption", searchItem)]
+//     );
+//     if (!post) throw new Error("获取帖子失败"); // 如果未获取到帖子，抛出错误
+//     return post; // 返回获取到的帖子
+//   } catch (error) {
+//     console.log(error); // 捕获并打印错误
+//   }
+// }
+
 
 export async function searchPosts(searchItem: string) {
   try {
-    const post = database.listDocuments(
+    // 使用提供的数据库ID和集合名称，以及搜索查询来获取帖子
+    const post = await database.listDocuments(
       appWriteConfig.databaseId,
       appWriteConfig.postCollection,
-      [Query.search("caption", searchItem)]
+      [Query.search("tags", searchItem)]
     );
-    if (!post) throw new Error("获取帖子失败");
-    return post;
+    if (!post) throw new Error("获取帖子失败"); // 如果未获取到帖子，抛出错误
+    return post; // 返回获取到的帖子
   } catch (error) {
-    console.log(error);
+    console.log(error); // 捕获并打印错误
+    throw error; // 抛出错误以便上层调用者能够处理
   }
 }
 
 
+
+/**
+ * 异步获取用户列表。
+ * @param limit 可选参数，指定返回用户数量的最大值，默认为10。
+ * @returns 返回用户文档的数组。如果未找到用户，抛出错误。
+ */
 export async function getUsers(limit ?:number) {
+  // 初始化查询条件，默认返回最近创建的10个用户
   const queries:any[] =  [Query.orderDesc("$createdAt"),Query.limit(10)];
-  if(
-    limit
-  ) queries.push(Query.limit(limit))
+  // 如果指定了limit参数，则更新查询条件以返回指定数量的用户
+  if(limit) queries.push(Query.limit(limit))
   try {
-    const users = await database.listDocuments(appWriteConfig.databaseId,appWriteConfig.userCollection,
+    // 从数据库中列出用户文档
+    const users = await database.listDocuments(
+      appWriteConfig.databaseId,
+      appWriteConfig.userCollection,
      queries)
+    // 如果未找到用户，抛出错误
     if (!users) throw new Error('user not found');
     return users;
-    
   } catch (error) {
-    console.log(error)
+    console.log(error) // 捕获并打印错误
   }
-
 }
 
+/**
+ * 根据用户ID异步获取用户信息。
+ * 
+ * @param userId 用户的唯一标识符。
+ * @returns 返回一个Promise，解析为用户对象。如果找不到用户，则抛出错误。
+ */
 export async function getUserById(userId:string) {
   try {
+    // 从数据库中获取指定ID的用户文档
     const user = await database.getDocument(
       appWriteConfig.databaseId,
       appWriteConfig.userCollection,
       userId
     );
-    if (!user) throw new Error(`Could not find the user with id ${userId}`);
-    return user;
+    if (!user) throw new Error(`Could not find the user with id ${userId}`); // 如果未找到用户，抛出错误
+    
+    return user; // 返回找到的用户对象
     
   } catch (error) {
-    console.log(error);
+    console.log(error); // 捕获并打印错误
     
   }
 }
+/**
+ * 更新用户信息。
+ * @param user 包含要更新的用户信息的对象，可能包括新文件、用户名、简介等。
+ * @returns 返回更新后的用户信息。
+ */
 export async function updateUser(user:IUpdateUser) {
+  // 检查是否有文件需要更新
   const hasFileToUpdate = user.file.length > 0;
   try {
+    // 初始化用户图片信息
     let image = {
       imageUrl: user.imageUrl,
       imageId: user.imageId,
     };
 
+    // 如果有文件需要更新，则上传新文件到存储
     if (hasFileToUpdate) {
-      // Upload new file to appwrite storage
       const uploadedFile = await uploadFile(user.file[0]);
       if (!uploadedFile) throw Error;
 
-      // Get new file url
+      // 获取新文件的URL
       const fileUrl = getFilePreviewUrl(uploadedFile.$id);
       if (!fileUrl) {
         await deleteFile(uploadedFile.$id);
         throw Error;
       }
 
+      // 更新图片信息为新上传的文件
       image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
     }
 
-    //  Update user
+    // 更新用户文档
     const updatedUser = await database.updateDocument(
       appWriteConfig.databaseId,
       appWriteConfig.userCollection,
@@ -459,24 +516,23 @@ export async function updateUser(user:IUpdateUser) {
       }
     );
 
-    // Failed to update
+    // 更新失败时的处理逻辑
     if (!updatedUser) {
-      // Delete new file that has been recently uploaded
+      // 如果有新文件上传，则删除它
       if (hasFileToUpdate) {
         await deleteFile(image.imageId);
       }
-      // If no new file uploaded, just throw error
-      throw Error;
+      throw Error; // 抛出错误
     }
 
-    // Safely delete old file after successful update
+    // 成功更新后，安全删除旧的图片文件
     if (user.imageId && hasFileToUpdate) {
       await deleteFile(user.imageId);
     }
 
-    return updatedUser;
+    return updatedUser; // 返回更新后的用户信息
   } catch (error) {
-    console.log(error);
+    console.log(error); // 捕获并记录错误
   }
 
 }

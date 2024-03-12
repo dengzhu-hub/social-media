@@ -5,13 +5,14 @@ import { logo } from '@/public/assets/images'
 import { useSignOutAccount } from '@/react-query/queriesAndMutation'
 import { INavLink } from '@/types'
 import { useEffect } from 'react'
-import { Link, useNavigate, NavLink } from 'react-router-dom'
+import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { Button } from '../ui/button'
 
 const SideBar = () => {
   const { user } = useAuthUser();
   const { mutate: signOut, isSuccess } = useSignOutAccount();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (isSuccess) navigate('/sign-in')
