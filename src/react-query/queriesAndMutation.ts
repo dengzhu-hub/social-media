@@ -296,6 +296,5 @@ export function useUpdateUser() {
         queryKey:[QUERY_KEYS.GET_USER_BY_ID,data?.$id]
       });
     }
-    
   })
 }

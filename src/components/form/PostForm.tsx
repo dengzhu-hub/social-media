@@ -12,7 +12,6 @@ import { PostValidation } from "@/lib/validation/validation"
 import { Models } from "appwrite"
 import { useCreatePost, useUpdatePost } from "@/react-query/queriesAndMutation"
 import { useAuthUser } from "@/hooks/userContext"
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "../ui/use-toast"
 import Loader from "@/components/shared/Loader";
@@ -24,7 +23,6 @@ type PostFormProps = {
 const PostForm = ({ post, action }: PostFormProps) => {
     const navigate = useNavigate();
     const { toast } = useToast();
-    const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
     const { user } = useAuthUser();
     const { mutateAsync: createPost, isPending: isUserCreatedPost } = useCreatePost();

@@ -27,6 +27,7 @@ const Profile = () => {
   if (!currentUser) {
     return <Loader children="" />;
   }
+  console.log(currentUser)
   return (
     <div className="profile-container">
       <div className="profile-inner_container">

@@ -2,21 +2,12 @@ import Loader from "@/components/shared/Loader";
 import PostCard from "@/components/shared/PostCard";
 import UserCard from "@/components/shared/UserCard";
 import {
-  useGetPosts,
   useGetRecentPosts,
   useGetUsers,
 } from "@/react-query/queriesAndMutation";
 import { Models } from "appwrite";
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
 
 const Home = () => {
-  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useGetPosts();
-    console.log(data)
-   
-  const { ref, inView } = useInView();
-
   const {
     data: creators,
     isLoading: isLoadingUser,
@@ -28,20 +19,9 @@ const Home = () => {
     isError: isErrorPost,
   } = useGetRecentPosts();
 
-
-
-  useEffect(() => {
-    if (inView) {
-      fetchNextPage();
-    }
-  }, [inView]);
   if (isErrorPost && isErrorUser) return <div>错误发生！</div>;
-  
-  if (!data || !posts) return (
-    <Loader children="" />
-  )
-  const {pages} = data;
-  console.log(pages[0])
+
+  if (!posts) return <Loader children="" />;
 
   return (
     <div className="flex flex-1">
@@ -54,17 +34,12 @@ const Home = () => {
             <Loader children=""></Loader>
           ) : (
             <ul className="flex flex-col flex-1 w-full gap-9 ">
-              {pages[0]?.documents.map((post: Models.Document) => (
+              {posts?.documents.map((post: Models.Document) => (
                 <PostCard post={post} key={post.$id} />
               ))}
             </ul>
           )}
         </div>
-        {hasNextPage && (
-          <div className="mt-10" ref={ref}>
-            <Loader children="" />
-          </div>
-        )}
       </div>
 
       <div className=" home-creators">

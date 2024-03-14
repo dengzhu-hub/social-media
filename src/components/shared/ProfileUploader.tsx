@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 
 import { convertFileToUrl } from "@/lib/utils";
+import { profile } from "@/public/assets/icons";
 
 type ProfileUploaderProps = {
   fieldChange: (files: File[]) => void;
@@ -34,7 +35,7 @@ const ProfileUploader = ({ fieldChange, mediaUrl }: ProfileUploaderProps) => {
 
       <div className="gap-4 cursor-pointer flex-center">
         <img
-          src={fileUrl || "/assets/icons/profile-placeholder.svg"}
+          src={fileUrl ||  profile}
           alt="image"
           className="object-cover object-top w-24 h-24 rounded-full"
         />
