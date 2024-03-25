@@ -25,6 +25,11 @@ export const createUser = async (user: INewUser) => {
     return error;
   }
 };
+/**
+ * TODO: Remove
+ * @param user 
+ * @returns 
+ */
 // 将用户保存到数据库的异步函数
 export async function saveUserToDB(user: {
   accountId: string; // 用户账户ID
@@ -241,15 +246,15 @@ export async function likePost(postId: string, likesArray: string[]) {
  * @param userId 用户的ID
  * @returns 保存成功的帖子信息
  */
-export async function savePost(userId: string,postId: string ) {
+export async function savePost(userId: string, postId: string) {
   try {
     const savePost = await database.createDocument(
       appWriteConfig.databaseId,
       appWriteConfig.saveCollection,
       ID.unique(),
       {
-        user:userId,
-        post:postId
+        user: userId,
+        post: postId,
       }
     );
     if (!savePost) throw new Error("保存失败");
@@ -314,7 +319,6 @@ export async function updatePost(post: IUpdatePost) {
       appWriteConfig.postCollection,
       post.postId,
       {
-        
         caption: post.caption,
         tags: tags,
         imageUrl: image.imageUrl,
@@ -406,7 +410,6 @@ export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
 //   }
 // }
 
-
 export async function searchPosts(searchItem: string) {
   try {
     // 使用提供的数据库ID和集合名称，以及搜索查询来获取帖子
@@ -423,39 +426,38 @@ export async function searchPosts(searchItem: string) {
   }
 }
 
-
-
 /**
  * 异步获取用户列表。
  * @param limit 可选参数，指定返回用户数量的最大值，默认为10。
  * @returns 返回用户文档的数组。如果未找到用户，抛出错误。
  */
-export async function getUsers(limit ?:number) {
+export async function getUsers(limit?: number) {
   // 初始化查询条件，默认返回最近创建的10个用户
-  const queries:any[] =  [Query.orderDesc("$createdAt"),Query.limit(10)];
+  const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(10)];
   // 如果指定了limit参数，则更新查询条件以返回指定数量的用户
-  if(limit) queries.push(Query.limit(limit))
+  if (limit) queries.push(Query.limit(limit));
   try {
     // 从数据库中列出用户文档
     const users = await database.listDocuments(
       appWriteConfig.databaseId,
       appWriteConfig.userCollection,
-     queries)
+      queries
+    );
     // 如果未找到用户，抛出错误
-    if (!users) throw new Error('user not found');
+    if (!users) throw new Error("user not found");
     return users;
   } catch (error) {
-    console.log(error) // 捕获并打印错误
+    console.log(error); // 捕获并打印错误
   }
 }
 
 /**
  * 根据用户ID异步获取用户信息。
- * 
+ *
  * @param userId 用户的唯一标识符。
  * @returns 返回一个Promise，解析为用户对象。如果找不到用户，则抛出错误。
  */
-export async function getUserById(userId:string) {
+export async function getUserById(userId: string) {
   try {
     // 从数据库中获取指定ID的用户文档
     const user = await database.getDocument(
@@ -464,12 +466,10 @@ export async function getUserById(userId:string) {
       userId
     );
     if (!user) throw new Error(`Could not find the user with id ${userId}`); // 如果未找到用户，抛出错误
-    
+
     return user; // 返回找到的用户对象
-    
   } catch (error) {
     console.log(error); // 捕获并打印错误
-    
   }
 }
 /**
@@ -477,7 +477,7 @@ export async function getUserById(userId:string) {
  * @param user 包含要更新的用户信息的对象，可能包括新文件、用户名、简介等。
  * @returns 返回更新后的用户信息。
  */
-export async function updateUser(user:IUpdateUser) {
+export async function updateUser(user: IUpdateUser) {
   // 检查是否有文件需要更新
   const hasFileToUpdate = user.file.length > 0;
   try {
@@ -534,5 +534,4 @@ export async function updateUser(user:IUpdateUser) {
   } catch (error) {
     console.log(error); // 捕获并记录错误
   }
-
 }

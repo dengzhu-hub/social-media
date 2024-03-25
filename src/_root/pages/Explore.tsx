@@ -51,6 +51,7 @@ const Explore = () => {
         <div className='gap-2 px-4 py-3 cursor-pointer flex-center bg-dark-3 rounded-xl '>
           <p className='uppercase small-medium md:base-medium text-light-2'>all</p>
           <img src={filter} width={20} height={20} alt="filter post" />
+        
         </div>
 
 
