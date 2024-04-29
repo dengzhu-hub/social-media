@@ -8,6 +8,7 @@ type PostProps = {
     post: Models.Document;
 }
 const PostCard = ({ post }: PostProps) => {
+    
     const { user } = useAuthUser();
     if (!post.creator) return;
     return (
@@ -36,7 +37,10 @@ const PostCard = ({ post }: PostProps) => {
                     <p className='backdrop-sepia-0'>{post?.caption}</p>
                     <ul className='flex flex-1 gap-3 mt-2'>
                         {post?.tags.map((tag: string) => (
+                            
                             <li className='small-medium text-light-3-2 ' key={tag}>#{tag}</li>
+                           
+                            
                         ))}
                     </ul>
                 </div>

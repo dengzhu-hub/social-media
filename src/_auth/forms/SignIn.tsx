@@ -20,7 +20,6 @@ import { Link } from 'react-router-dom';
 import { useToast } from "@/components/ui/use-toast";
 import { useSignAccount } from '@/react-query/queriesAndMutation';
 import { useAuthUser } from '@/hooks/userContext';
-
 const SignIn = () => {
   const { toast } = useToast();
   const { checkAuthUser } = useAuthUser();
@@ -43,6 +42,8 @@ const SignIn = () => {
       email: values.email,
       password: values.password
     });
+    console.log(session);
+    
     if (!session) {
       return toast({
         description: "sign in failed, please try again.",

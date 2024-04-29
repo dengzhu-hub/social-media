@@ -52,4 +52,12 @@ export const checkedIsLiked = (likesArray: string[], userId: string) => {
   return likesArray.includes(userId);
 };
 
-export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
+/**
+ * Creates a URL that represents the object URL for the given file.
+ *
+ * @param file - the file to create an object URL for
+ * @returns the object URL for the given file
+ */
+export function convertFileToUrl(file: File): string {
+  return URL.createObjectURL(file);
+}

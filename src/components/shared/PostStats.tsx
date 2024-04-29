@@ -23,7 +23,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     const hasSaveRecord = currentUser?.save.find((record: Models.Document) => record?.post?.$id === post?.$id);
     useEffect(() => {
         setIsSaved(!!hasSaveRecord)
-    }, [currentUser])
+    }, [hasSaveRecord])
 
     const handleLikePost = (
         e: React.MouseEvent<HTMLImageElement, MouseEvent>

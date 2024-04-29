@@ -29,10 +29,9 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const navigate = useNavigate();
     const checkAuthUser = async () => {
-
         try {
             const currentAccount = await getCurrentUser();
-
+    
             if (currentAccount) {
                 setUser({
                     id: currentAccount.$id,
@@ -41,28 +40,30 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
                     email: currentAccount.email,
                     bio: currentAccount.bio,
                     imageUrl: currentAccount.imageUrl,
-                })
+                });
                 setIsAuthenticated(true);
                 return true;
             }
             return false;
         } catch (error) {
-            throw new Error('Error')
-        }
-        finally {
+            console.error('Error in checkAuthUser:', error);
+            // 这里您可以选择适当的错误处理逻辑，比如记录错误或者通知用户
+            return false;
+        } finally {
             setIsLoading(false);
-
         }
-
     };
+    
     useEffect(() => {
-        // localStorage.getItem('cookieFallback') === null) {
-        if (localStorage.getItem('cookieFallback') === undefined) {
+        const cookieFallback = localStorage.getItem('cookieFallback');
+        if (!cookieFallback) {
             navigate('/sign-in');
+        } else {
+            checkAuthUser();
         }
-        checkAuthUser();
-
-    }, [])
+    }, []);
+    
+    
     const value = {
         user,
         setUser,

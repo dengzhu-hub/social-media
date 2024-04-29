@@ -33,7 +33,7 @@ export const sidebarLinks = [
   },
 ];
 
-export const bottombarLinks = [
+export const bottomBarLinks = [
   {
     imgURL: home,
     route: "/",

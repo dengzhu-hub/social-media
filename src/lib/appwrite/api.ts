@@ -27,8 +27,8 @@ export const createUser = async (user: INewUser) => {
 };
 /**
  * TODO: Remove
- * @param user 
- * @returns 
+ * @param user
+ * @returns
  */
 // 将用户保存到数据库的异步函数
 export async function saveUserToDB(user: {
@@ -60,6 +60,8 @@ export async function saveUserToDB(user: {
 export async function signInAccount(user: { email: string; password: string }) {
   try {
     const session = await account.createEmailSession(user.email, user.password);
+    console.log(session);
+
     return session;
   } catch (error) {
     console.log(error);
@@ -220,9 +222,15 @@ export async function getRecentPost() {
   }
 }
 
+/**
+ * 为指定的文章帖子添加喜欢。
+ * @param postId 文章帖子的唯一标识符。
+ * @param likesArray 包含喜欢该帖子的用户ID的数组。
+ * @returns 返回更新后的帖子信息或者在发生错误时抛出异常。
+ */
 export async function likePost(postId: string, likesArray: string[]) {
   try {
-    // 使用数据库对指定 postId 的文档进行更新，将 likes 字段设置为 likesArray
+    // 在数据库中更新指定 postId 的帖子，将 likes 字段设置为 likesArray
     const updatePost = await database.updateDocument(
       appWriteConfig.databaseId,
       appWriteConfig.postCollection,
@@ -232,8 +240,8 @@ export async function likePost(postId: string, likesArray: string[]) {
       }
     );
 
-    // 如果更新操作没有返回结果，则抛出错误
-    if (!updatePost) throw new Error("");
+    // 如果更新操作没有成功执行，则抛出错误
+    if (!updatePost) throw new Error("更新失败!");
     return updatePost;
   } catch (error) {
     console.log(error);
@@ -297,23 +305,37 @@ export async function getPostById(postId: string) {
   }
 }
 
+/**
+ * 更新文章信息
+ * @param post 包含更新文章所需数据的对象，如图片、标签等
+ * @returns 返回更新后的文章信息
+ */
 export async function updatePost(post: IUpdatePost) {
+  // 检查是否有文件需要更新
   const hasFileToUpdate = post.file.length > 0;
   try {
+    // 初始化image对象，包含当前的图片URL和ID
     let image = {
       imageUrl: post.imageUrl,
       imageId: post.imageId,
     };
+    // 如果有文件需要更新，则执行文件上传
     if (hasFileToUpdate) {
       const uploadedFile = await uploadFile(post.file[0]);
+      // 如果文件上传失败，抛出错误
       if (!uploadedFile) throw new Error(`文件上传失败`);
+      // 获取上传文件的预览URL
       const fileUrl = getFilePreviewUrl(uploadedFile.$id);
+      // 如果无法获取文件URL，抛出错误
       if (!fileUrl) {
         throw new Error(`获取文件url失败`);
       }
+      // 更新image对象，使用新上传文件的URL和ID
       image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
     }
+    // 处理文章标签，将其转换为数组形式
     const tags = post?.tags?.replace(/ /g, "").split(",") || [];
+    // 更新数据库中的文章文档
     const updatePost = await database.updateDocument(
       appWriteConfig.databaseId,
       appWriteConfig.postCollection,
@@ -326,10 +348,12 @@ export async function updatePost(post: IUpdatePost) {
         location: post.location,
       }
     );
+    // 如果文章更新失败，删除已上传的文件并抛出错误
     if (!updatePost) {
       deleteFile(post.imageId);
       throw new Error(`文章创建失败`);
     }
+    // 返回更新成功后的文章信息
     return updatePost;
   } catch (error) {
     console.log(error);
@@ -364,7 +388,7 @@ export async function deletePost(postId?: string, imageId?: string) {
  */
 export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
   // 初始化查询条件，包括按更新时间降序排列和限制返回的文章数量。
-  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
+  const queries: string[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
 
   // 如果提供了页码参数，则添加到查询条件中，用于分页。
   if (pageParam) {
@@ -416,7 +440,7 @@ export async function searchPosts(searchItem: string) {
     const post = await database.listDocuments(
       appWriteConfig.databaseId,
       appWriteConfig.postCollection,
-      [Query.search("tags", searchItem)]
+      [Query.search("caption", searchItem)]
     );
     if (!post) throw new Error("获取帖子失败"); // 如果未获取到帖子，抛出错误
     return post; // 返回获取到的帖子
@@ -433,7 +457,7 @@ export async function searchPosts(searchItem: string) {
  */
 export async function getUsers(limit?: number) {
   // 初始化查询条件，默认返回最近创建的10个用户
-  const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(10)];
+  const queries: string[] = [Query.orderDesc("$createdAt"), Query.limit(10)];
   // 如果指定了limit参数，则更新查询条件以返回指定数量的用户
   if (limit) queries.push(Query.limit(limit));
   try {
