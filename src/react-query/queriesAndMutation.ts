@@ -25,6 +25,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./queryKeys";
+import { Models } from "appwrite";
 
 /**
  * 使用CreateUserAccount mutation
@@ -97,7 +98,7 @@ export const useLikePost = () => {
       postId: string;
       likesArray: string[];
     }) => likePost(postId, likesArray),
-    onSuccess: data => {
+    onSuccess: (data) => {
       // 在成功创建帖子后，刷新获取最近帖子的查询结果
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
@@ -114,7 +115,6 @@ export const useLikePost = () => {
     },
   });
 };
-
 
 export const useSavePost = () => {
   const queryClient = useQueryClient();
@@ -182,7 +182,7 @@ export const useUpdatePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (post: IUpdatePost) => updatePost(post),
-    onSuccess: data => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
       });
@@ -205,14 +205,17 @@ export const useDeletePost = () => {
 /**
  * 使用`useGetPosts`函数来获取无限加载的文章数据。
  * 该函数内部使用了`useInfiniteQuery`钩子来实现分页加载文章数据的功能。
- * 
+ *
  * @returns 返回一个包含查询状态、数据、加载更多函数等属性的对象。
  */
 export const useGetPosts = () => {
-  return useInfiniteQuery({
+  return useInfiniteQuery<Models.DocumentList<Models.Document>>({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-    queryFn: getInfinitePosts ,
-    getNextPageParam: (lastPage) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    queryFn: getInfinitePosts as any,
+    initialPageParam: 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getNextPageParam: (lastPage: any) => {
       // 如果 lastPage 为 undefined 或者 lastPage.documents 为 undefined 或者为空数组，则没有更多页面
       if (!lastPage || !lastPage.documents || lastPage.documents.length === 0) {
         return null;
@@ -225,10 +228,9 @@ export const useGetPosts = () => {
   });
 };
 
-
 /**
  * 使用给定的搜索词进行帖子搜索。
- * 
+ *
  * @param searchTerm 搜索词，用于查询相关的帖子。
  * @returns 返回一个QueryResult对象，包含搜索帖子的结果数据、状态等信息。
  */
@@ -243,23 +245,21 @@ export function useSearchPosts(searchTerm: string) {
 
 /**
  * 使用useQuery钩子来获取用户数据。
- * 
+ *
  * @param limit 可选参数，用于限制返回的用户数量。
  * @returns 返回一个包含查询状态、数据和其他实用方法的对象。
  */
-export function useGetUsers(limit?:number) {
+export function useGetUsers(limit?: number) {
   // 使用Query Hook来执行异步数据获取，并管理状态
   return useQuery({
-    queryKey:[QUERY_KEYS.GET_USERS], // 指定查询的键
+    queryKey: [QUERY_KEYS.GET_USERS], // 指定查询的键
     queryFn: () => getUsers(limit), // 指定执行查询的函数，可传入限制数量
-
-  })
+  });
 }
-
 
 /**
  * 使用给定的用户ID来获取用户信息的自定义Hook。
- * 
+ *
  * @param userId 用户的唯一标识符，类型为字符串。
  * @returns 返回一个QueryResult对象，包含了用户信息的查询结果及其状态（如是否正在加载、是否有错误等）。
  */
@@ -268,33 +268,33 @@ export function useGetUserById(userId: string) {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId], // 使用数组包含QUERY_KEYS.GET_USER_BY_ID和userId作为查询的键
     queryFn: () => getUserById(userId), // 定义执行查询的函数，此处使用getUserById函数来获取用户信息
-    enabled:!!userId, // 根据userId是否存在来决定是否启用自动查询，如果userId存在，则启用查询；否则，禁用查询
+    enabled: !!userId, // 根据userId是否存在来决定是否启用自动查询，如果userId存在，则启用查询；否则，禁用查询
   });
 }
 
 /**
  * 使用`useUpdateUser`函数来创建一个用于更新用户的mutation。
- * 
+ *
  * @returns 返回一个包含`mutate`和`mutateAsync`方法的对象，用于更新用户信息，并在成功更新后自动刷新相关的查询数据。
  */
 export function useUpdateUser() {
   // 获取Query Client实例
   const queryClient = useQueryClient();
-  
+
   // 使用useMutation钩子来创建一个用于更新用户信息的mutation
   return useMutation({
     // 定义mutation的执行函数，接收一个用户信息对象作为参数，并调用`updateUser`函数进行更新
-    mutationFn:(user:IUpdateUser) => updateUser(user),
+    mutationFn: (user: IUpdateUser) => updateUser(user),
     // 定义mutation成功执行后的回调函数，用于刷新相关的查询数据
-    onSuccess:(data) => {
+    onSuccess: (data) => {
       // 刷新当前用户信息的查询
       queryClient.invalidateQueries({
-        queryKey:[QUERY_KEYS.GET_CURRENT_USER]
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
       });
       // 刷新指定用户ID的用户信息查询
       queryClient.invalidateQueries({
-        queryKey:[QUERY_KEYS.GET_USER_BY_ID,data?.$id]
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
       });
-    }
-  })
+    },
+  });
 }

@@ -19,6 +19,7 @@ const ProfileUploader = ({ fieldChange, mediaUrl }: ProfileUploaderProps) => {
       fieldChange(acceptedFiles);
       setFileUrl(convertFileToUrl(acceptedFiles[0]));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [file]
   );
 
@@ -35,7 +36,7 @@ const ProfileUploader = ({ fieldChange, mediaUrl }: ProfileUploaderProps) => {
 
       <div className="gap-4 cursor-pointer flex-center">
         <img
-          src={fileUrl ||  profile}
+          src={fileUrl || profile}
           alt="image"
           className="object-cover object-top w-24 h-24 rounded-full"
         />

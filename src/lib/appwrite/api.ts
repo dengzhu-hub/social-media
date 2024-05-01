@@ -334,7 +334,7 @@ export async function updatePost(post: IUpdatePost) {
       image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
     }
     // 处理文章标签，将其转换为数组形式
-    const tags = post?.tags?.replace(/ /g, "").split(",") || [];
+    const tags = post?.tags?.split(",").map((tag) => tag.trim()) || [];
     // 更新数据库中的文章文档
     const updatePost = await database.updateDocument(
       appWriteConfig.databaseId,
